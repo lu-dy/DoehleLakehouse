@@ -1,0 +1,24 @@
+{
+	"name": "AzureSynapseServerlessSQLPoolParamterized",
+	"properties": {
+		"parameters": {
+			"HostURL": {
+				"type": "string",
+				"defaultValue": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
+			},
+			"DatenbankName": {
+				"type": "string",
+				"defaultValue": "Alien"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDW",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().HostURL};Initial Catalog=@{linkedService().DatenbankName}"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
