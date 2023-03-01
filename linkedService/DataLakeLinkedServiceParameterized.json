@@ -1,10 +1,17 @@
 {
 	"name": "DataLakeLinkedServiceParameterized",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
+		"parameters": {
+			"HostURL": {
+				"type": "string",
+				"defaultValue": "https://dlsmdwhgwc001.dfs.core.windows.net"
+			}
+		},
 		"annotations": [],
 		"type": "AzureBlobFS",
 		"typeProperties": {
-			"url": "https://dlsmdwhgwc001.dfs.core.windows.net/"
+			"url": "@{linkedService().HostURL}"
 		},
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
