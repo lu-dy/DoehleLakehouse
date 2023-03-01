@@ -1,5 +1,5 @@
 {
-	"name": "PersistViewInParquet_D_Date",
+	"name": "PersistViewInParquet_D_DATE",
 	"properties": {
 		"activities": [
 			{
@@ -28,8 +28,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSynapseAnalyticsTable1",
-						"type": "DatasetReference"
+						"referenceName": "AzureServerlessSqlViewParameterized",
+						"type": "DatasetReference",
+						"parameters": {
+							"SchemaPath": "DM",
+							"TableView": "D_VESSEL",
+							"DatabaseURL": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
+						}
 					}
 				],
 				"outputs": [
