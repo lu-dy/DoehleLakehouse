@@ -21,8 +21,13 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "SqlDWSink",
-						"writeBehavior": "Upsert"
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
 					},
 					"enableStaging": false,
 					"translator": {
@@ -48,13 +53,13 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureServerlessSqlViewParameterized",
+						"referenceName": "ParquetDatalakeDataset",
 						"type": "DatasetReference",
 						"parameters": {
-							"SchemaPath": "DM",
-							"TableView": "D_VESSEL",
-							"DatabaseURL": "RTMart",
-							"HostURL": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
+							"DataLake": "blob-mdwh-allgemein",
+							"FolderPath": "RawLayer/",
+							"File": "xxx",
+							"HostURL": "https://dlsmdwhgwc001.dfs.core.windows.net"
 						}
 					}
 				]
