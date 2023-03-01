@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "asw-mdwh-synapse-wokspace-gwc-002-test"
+		},
+		"AzureSynapseServerlessSQLPoolParamterized_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().HostURL};Initial Catalog=@{linkedService().DatenbankName}"
+		},
+		"asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:asw-mdwh-synapse-wokspace-gwc-002-test.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"DataLakeLinkedServiceParameterized_properties_typeProperties_url": {
+			"value": "@{linkedService().HostURL}"
+		},
+		"asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://dlsmdwhgwc001.dfs.core.windows.net"
+		}
+	}
+}
