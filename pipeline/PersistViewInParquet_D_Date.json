@@ -21,16 +21,23 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "ParquetSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "ParquetWriteSettings"
-						}
+						"type": "SqlDWSink",
+						"allowCopyCommand": true
 					},
 					"enableStaging": false
-				}
+				},
+				"inputs": [
+					{
+						"referenceName": "AzureSynapseAnalyticsTable1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSynapseAnalyticsTable2",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
