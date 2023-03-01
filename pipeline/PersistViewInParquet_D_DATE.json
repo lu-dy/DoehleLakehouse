@@ -33,8 +33,7 @@
 						"parameters": {
 							"SchemaPath": "DM",
 							"TableView": "D_VESSEL",
-							"DatabaseURL": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net",
-							"hostURL": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net",
+							"DatabaseURL": "DoehleResearch",
 							"HostURL": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
 						}
 					}
