@@ -5,8 +5,14 @@
 			"referenceName": "AzureSynapseServerlessSQLPoolParamterized",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"HostURL": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net",
-				"DatenbankName": "DoehleResearch"
+				"HostURL": {
+					"value": "@dataset().HostURL",
+					"type": "Expression"
+				},
+				"DatenbankName": {
+					"value": "@dataset().DatabaseURL",
+					"type": "Expression"
+				}
 			}
 		},
 		"parameters": {
@@ -19,6 +25,14 @@
 				"defaultValue": "D_VESSEL"
 			},
 			"DatabaseURL": {
+				"type": "String",
+				"defaultValue": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
+			},
+			"hostURL": {
+				"type": "String",
+				"defaultValue": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
+			},
+			"HostURL": {
 				"type": "String",
 				"defaultValue": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
 			}
