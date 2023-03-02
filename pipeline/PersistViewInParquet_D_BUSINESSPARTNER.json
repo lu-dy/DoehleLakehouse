@@ -17,6 +17,11 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
+						"additionalColumns": [
+							{
+								"value": "$$COLUMN:"
+							}
+						],
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -46,7 +51,7 @@
 						"parameters": {
 							"SchemaPath": "DM",
 							"TableView": "D_BUSINESSPARTNER",
-							"DatabaseURL": "DeohleResearch",
+							"DatabaseURL": "DoehleResearch",
 							"HostURL": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
 						}
 					}
