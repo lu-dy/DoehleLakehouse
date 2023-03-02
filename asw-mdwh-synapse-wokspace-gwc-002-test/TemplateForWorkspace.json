@@ -1,0 +1,462 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "asw-mdwh-synapse-wokspace-gwc-002-test"
+		},
+		"AzureSynapseServerlessSQLPoolParamterized_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSynapseServerlessSQLPoolParamterized'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().HostURL};Initial Catalog=@{linkedService().DatenbankName}"
+		},
+		"asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:asw-mdwh-synapse-wokspace-gwc-002-test.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"DataLakeLinkedServiceParameterized_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{linkedService().HostURL}"
+		},
+		"asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlsmdwhgwc001.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/PersistViewInParquet_D_BUSINESSPARTNER')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "View2Parquet",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureServerlessSqlViewParameterized",
+								"type": "DatasetReference",
+								"parameters": {
+									"SchemaPath": "DM",
+									"TableView": "D_BUSINESSPARTNER",
+									"DatabaseURL": "DeohleResearch",
+									"HostURL": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ParquetDatalakeDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"DataLake": "blob-mdwh-allgemein",
+									"FolderPath": "Intermediate/Parquet/RT",
+									"File": "D_BUSINESSPARTNER",
+									"HostURL": "https://dlsmdwhgwc001.dfs.core.windows.net"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "02 Test/RT Reports"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/AzureServerlessSqlViewParameterized')]",
+				"[concat(variables('workspaceId'), '/datasets/ParquetDatalakeDataset')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/PersistViewInParquet_D_DATE')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "View2Parquet",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureServerlessSqlViewParameterized",
+								"type": "DatasetReference",
+								"parameters": {
+									"SchemaPath": "DM",
+									"TableView": "D_VESSEL",
+									"DatabaseURL": "DoehleResearch",
+									"HostURL": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ParquetDatalakeDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"DataLake": "blob-mdwh-allgemein",
+									"FolderPath": "Intermediate/Parquet/RT",
+									"File": "D_VESSEL",
+									"HostURL": "https://dlsmdwhgwc001.dfs.core.windows.net"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "02 Test/RT Reports"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/AzureServerlessSqlViewParameterized')]",
+				"[concat(variables('workspaceId'), '/datasets/ParquetDatalakeDataset')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureServerlessSqlViewParameterized')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseServerlessSQLPoolParamterized",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"HostURL": {
+							"value": "@dataset().HostURL",
+							"type": "Expression"
+						},
+						"DatenbankName": {
+							"value": "@dataset().DatabaseURL",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"SchemaPath": {
+						"type": "String",
+						"defaultValue": "DM"
+					},
+					"TableView": {
+						"type": "String",
+						"defaultValue": "D_VESSEL"
+					},
+					"DatabaseURL": {
+						"type": "String",
+						"defaultValue": "DeohleResearch"
+					},
+					"HostURL": {
+						"type": "String",
+						"defaultValue": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().SchemaPath",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().TableView",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureSynapseServerlessSQLPoolParamterized')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureSynapseAnalyticsTable1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseServerlessSQLPoolParamterized",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureSynapseServerlessSQLPoolParamterized')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureSynapseAnalyticsTable2')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultSqlServer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ParquetDatalakeDataset')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataLakeLinkedServiceParameterized",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"HostURL": {
+							"value": "@dataset().HostURL",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"DataLake": {
+						"type": "string",
+						"defaultValue": "blob-mdwh-allgemein"
+					},
+					"FolderPath": {
+						"type": "string",
+						"defaultValue": "RawLayer/"
+					},
+					"File": {
+						"type": "string",
+						"defaultValue": "xxx"
+					},
+					"HostURL": {
+						"type": "string",
+						"defaultValue": "https://dlsmdwhgwc001.dfs.core.windows.net"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().FolderPath",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().DataLake",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "none"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/DataLakeLinkedServiceParameterized')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureSynapseServerlessSQLPoolParamterized')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"HostURL": {
+						"type": "string",
+						"defaultValue": "asw-mdwh-synapse-wokspace-gwc-001-ondemand.sql.azuresynapse.net"
+					},
+					"DatenbankName": {
+						"type": "string",
+						"defaultValue": "Alien"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSynapseServerlessSQLPoolParamterized_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DataLakeLinkedServiceParameterized')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"HostURL": {
+						"type": "string",
+						"defaultValue": "https://dlsmdwhgwc001.dfs.core.windows.net"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('DataLakeLinkedServiceParameterized_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('asw-mdwh-synapse-wokspace-gwc-002-test-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

@@ -1,0 +1,51 @@
+{
+	"name": "ParquetDatalakeDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLakeLinkedServiceParameterized",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"HostURL": {
+					"value": "@dataset().HostURL",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"DataLake": {
+				"type": "string",
+				"defaultValue": "blob-mdwh-allgemein"
+			},
+			"FolderPath": {
+				"type": "string",
+				"defaultValue": "RawLayer/"
+			},
+			"File": {
+				"type": "string",
+				"defaultValue": "xxx"
+			},
+			"HostURL": {
+				"type": "string",
+				"defaultValue": "https://dlsmdwhgwc001.dfs.core.windows.net"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().FolderPath",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().DataLake",
+					"type": "Expression"
+				}
+			},
+			"compressionCodec": "none"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
